@@ -1,15 +1,16 @@
 export enum AnimationType {
-    SET,
-    SELECTED,
-    UNSELECTED
-  }
-  
+  SET,
+  SELECTED,
+  UNSELECTED,
+  SWAP,
+}
+
 export interface Animation {
-    indices: [number, number];
-    type: AnimationType;
-  }
+  indices: [number, number];
+  type: AnimationType;
+}
 
 export interface Bar {
-    selected: boolean;
-    value: number;
-  }
+  selected: boolean;
+  value: number;
+}
