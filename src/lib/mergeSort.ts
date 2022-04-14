@@ -1,8 +1,8 @@
 import {
   Animation,
-  AnimationType,
   Bar,
 } from "../components/sorting/Animations";
+import { pushSelectAnimation, pushSetAnimation } from "./helpers";
 
 const calculateRight = (index: number, middleIndex: number): number => {
   return middleIndex + 1 + index;
@@ -19,22 +19,6 @@ const merge = (
   right: number,
   animations: Animation[]
 ) => {
-  const pushSelectAnimation = (indicie1: number, indicie2: number) => {
-    animations.push({
-      indices: [indicie1, indicie2],
-      type: AnimationType.SELECTED,
-    });
-    animations.push({
-      indices: [indicie1, indicie2],
-      type: AnimationType.UNSELECTED,
-    });
-  };
-  const pushSetAnimation = (index: number, value: number) => {
-    animations.push({
-      indices: [index, value],
-      type: AnimationType.SET,
-    });
-  };
   const leftArray: number[] = [];
   const rightArray: number[] = [];
   for (let i = left; i <= middle; i++) {
@@ -49,11 +33,11 @@ const merge = (
   while (i < leftArray.length && j < rightArray.length) {
     if (leftArray[i] < rightArray[j]) {
       arr[index] = leftArray[i];
-      pushSetAnimation(index, leftArray[i]);
+      pushSetAnimation(animations, index, leftArray[i]);
       i++;
     } else {
       arr[index] = rightArray[j];
-      pushSetAnimation(index, rightArray[j]);
+      pushSetAnimation(animations, index, rightArray[j]);
       j++;
     }
     index++;
@@ -61,8 +45,8 @@ const merge = (
   if (i < leftArray.length) {
     while (i < leftArray.length) {
       let value = calculateLeft(i, left);
-      pushSelectAnimation(value, value);
-      pushSetAnimation(index, leftArray[i]);
+      pushSelectAnimation(animations, value, value);
+      pushSetAnimation(animations, index, leftArray[i]);
       arr[index] = leftArray[i];
       i++;
       index++;
@@ -70,8 +54,8 @@ const merge = (
   } else if (j < rightArray.length) {
     while (j < rightArray.length) {
       let value = calculateRight(j, middle);
-      pushSelectAnimation(value, value);
-      pushSetAnimation(index, rightArray[j]);
+      pushSelectAnimation(animations, value, value);
+      pushSetAnimation(animations, index, rightArray[j]);
       arr[index] = rightArray[j];
       j++;
       index++;

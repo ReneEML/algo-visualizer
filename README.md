@@ -1,7 +1,7 @@
 # Algorithm Visualizer 🤖📈
 
 ## 🚀 Features
-- Merge sort visualization
+- Sorting algoritm visualization
 
 ## ⚛️ Stack
 - React.js
@@ -9,7 +9,6 @@
 - MUI
 - TypeScript
 ## ✨ Goals
-- Sorting(Merge Sort, Quick Sort, Insertion)
 - Graph(BFS, DFS, MST)
 - Search (Dijkstra's, APSP, A*)
 

@@ -2,11 +2,13 @@ import { Button, MenuItem, Select, TextField } from "@mui/material";
 import React, { useState } from "react";
 import insertionSort from "../../lib/insertionSort";
 import mergeSort from "../../lib/mergeSort";
+import quickSort from "../../lib/quickSort";
 import { Animation, AnimationType, Bar } from "./Animations";
 
 enum SortingAlgo {
   MERGE,
   INSERTION,
+  QUICK,
 }
 
 const generateData = (size: number): Bar[] => {
@@ -34,6 +36,7 @@ export const Sorting = () => {
 
   const onNumBarsChange = (e: any) => setNumBars(e.target.value);
   const onTimeoutLenghtChange = (e: any) => setTimeoutLenght(e.target.value);
+  const onAlgorithmChange = (e: any) => setAlgorithm(e.target.value);
 
   const animateSet = (animation: Animation) => {
     let newArray = [...array];
@@ -89,6 +92,8 @@ export const Sorting = () => {
         return mergeSort(array);
       case SortingAlgo.INSERTION:
         return insertionSort(array);
+      case SortingAlgo.QUICK:
+        return quickSort(array);
       default:
         break;
     }
@@ -129,11 +134,16 @@ export const Sorting = () => {
         >
           Sort
         </Button>
-        {animating ? <Button variant="outlined" onClick={() => global.location.reload()}>Cancel</Button> : <></>}
+        {animating ? (
+          <Button variant="outlined" onClick={() => global.location.reload()}>
+            Cancel
+          </Button>
+        ) : (
+          <></>
+        )}
         <Button
           variant="outlined"
           onClick={async () => {
-            console.log(animating);
             if (!animating) {
               setArray(generateData(numBars));
               setMax(Math.max(...array.map((bar) => bar.value)));
@@ -163,10 +173,11 @@ export const Sorting = () => {
           id="demo-simple-select"
           value={algorithm}
           label="Algorithm"
-          onChange={(e) => setAlgorithm(e.target.value as SortingAlgo)}
+          onChange={onAlgorithmChange}
         >
           <MenuItem value={SortingAlgo.MERGE}>Merge Sort</MenuItem>
           <MenuItem value={SortingAlgo.INSERTION}>Insertion Sort</MenuItem>
+          <MenuItem value={SortingAlgo.QUICK}>Quick Sort</MenuItem>
         </Select>
       </div>
     </>
