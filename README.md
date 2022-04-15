@@ -6,7 +6,6 @@
 ## ⚛️ Stack
 - React.js
 - TailwindCss
-- MUI
 - TypeScript
 ## ✨ Goals
 - Graph(BFS, DFS, MST)
