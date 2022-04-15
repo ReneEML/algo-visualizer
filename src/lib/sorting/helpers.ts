@@ -1,4 +1,4 @@
-import { Animation, AnimationType } from "../components/sorting/Animations";
+import { Animation, AnimationType } from "../../components/sorting/Animations";
 
 export const swap = (array: number[], i: number, j: number) => {
   let tmp = array[i];

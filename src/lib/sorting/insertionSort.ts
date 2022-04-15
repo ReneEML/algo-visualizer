@@ -1,10 +1,11 @@
 import {
   Animation,
   Bar,
-} from "../components/sorting/Animations";
+} from "../../components/sorting/Animations";
 import { pushSelectAnimation, pushSwapAnimation, swap } from "./helpers";
 
 const insertionSort = (arr: Bar[]): Animation[] => {
+  if(arr.length <= 1) return []
   const newArray = arr.map((arr) => arr.value);
   const animations: Animation[] = [];
   for (let i = 0; i < newArray.length; i++) {

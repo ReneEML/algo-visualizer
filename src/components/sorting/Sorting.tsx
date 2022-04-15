@@ -1,8 +1,10 @@
-import { Button, MenuItem, Select, TextField } from "@mui/material";
 import React, { useState } from "react";
-import insertionSort from "../../lib/insertionSort";
-import mergeSort from "../../lib/mergeSort";
-import quickSort from "../../lib/quickSort";
+import insertionSort from "../../lib/sorting/insertionSort";
+import mergeSort from "../../lib/sorting/mergeSort";
+import quickSort from "../../lib/sorting/quickSort";
+import Button from "../shared/button";
+import { Option, Select } from "../shared/select";
+import TextField from "../shared/textfield";
 import { Animation, AnimationType, Bar } from "./Animations";
 
 enum SortingAlgo {
@@ -23,7 +25,7 @@ const generateData = (size: number): Bar[] => {
 };
 
 const calculateHeight = (num: number, denom: number) => {
-  return Math.round((num / denom) * 100);
+  return Math.floor((num / denom) * 100);
 };
 
 export const Sorting = () => {
@@ -33,11 +35,37 @@ export const Sorting = () => {
   const [array, setArray] = useState(generateData(numBars));
   const [max, setMax] = useState(Math.max(...array.map((bar) => bar.value)));
   const [algorithm, setAlgorithm] = useState(SortingAlgo.MERGE);
+  const [sorted, setSorted] = useState(false);
 
   const onNumBarsChange = (e: any) => setNumBars(e.target.value);
   const onTimeoutLenghtChange = (e: any) => setTimeoutLenght(e.target.value);
-  const onAlgorithmChange = (e: any) => setAlgorithm(e.target.value);
+  const onAlgorithmChange = (e: any) => {
+    setAlgorithm(parseInt(e.target.value));
+  };
 
+  const validateBarsInput = (): number => {
+    if (numBars < 2) {
+      setNumBars(2);
+      return 2;
+    }
+    if (numBars > 300) {
+      setNumBars(300);
+      return 300;
+    }
+    return numBars;
+  };
+
+  const validateTimeoutLengthInput = (): number => {
+    if (timeoutLength < 10) {
+      setTimeoutLenght(10);
+      return 10;
+    }
+    if (timeoutLength > 200) {
+      setTimeoutLenght(200);
+      return 200;
+    }
+    return timeoutLength;
+  };
   const animateSet = (animation: Animation) => {
     let newArray = [...array];
     newArray[animation.indices[0]].value = animation.indices[1];
@@ -95,31 +123,44 @@ export const Sorting = () => {
       case SortingAlgo.QUICK:
         return quickSort(array);
       default:
+        console.log(typeof algorithm);
         break;
     }
     return [];
   };
 
   const animateSort = () => {
-    const animationTimeout = timeoutLength;
+    const animationTimeout = validateTimeoutLengthInput();
     const animations = sort();
     setAnimating(true);
     for (let i = 0; i < animations.length; i++) {
       setTimeout(() => animate(animations[i]), i * animationTimeout);
       if (i === animations.length - 1)
-        setTimeout(() => setAnimating(false), i * animationTimeout);
+        setTimeout(() => {
+          setAnimating(false);
+          setSorted(true);
+        }, i * animationTimeout);
     }
   };
 
+  const options: Option[] = [
+    { label: "Merge Sort", value: SortingAlgo.MERGE, selected: true },
+    { label: "Quick Sort", value: SortingAlgo.QUICK, selected: false },
+    { label: "Insertion Sort", value: SortingAlgo.INSERTION, selected: false },
+  ];
   return (
     <>
-      <div className="flex flex-row space-x-0.5 h-80">
+      <div
+        className={`flex flex-row space-x-0.5 h-96 border-2 ${
+          animating && !sorted ? "border-red-500" : (sorted ? "border-green-500" : "border-indigo-500")
+        } rounded-sm px-4 py-4`}
+      >
         {array.map((bar, index) => {
           const color = bar.selected ? "bg-red-500" : "bg-indigo-500";
           return (
             <div
               key={`sort_grid_${index}`}
-              className={`${color} pl-0.5 py-1`}
+              className={`${color} pl-0.5`}
               style={{ height: `${calculateHeight(bar.value, max)}%` }}
             ></div>
           );
@@ -127,58 +168,40 @@ export const Sorting = () => {
       </div>
       <div className="flex flex-row py-4 px-4 space-x-4">
         <Button
-          variant="outlined"
-          onClick={() => {
-            animateSort();
+          onClick={async () => {
+            if (!sorted) animateSort();
           }}
-        >
-          Sort
-        </Button>
+          text=" Sort"
+        />
         {animating ? (
-          <Button variant="outlined" onClick={() => global.location.reload()}>
-            Cancel
-          </Button>
+          <Button onClick={() => global.location.reload()} text="Cancel" />
         ) : (
           <></>
         )}
         <Button
-          variant="outlined"
-          onClick={async () => {
+          onClick={() => {
             if (!animating) {
-              setArray(generateData(numBars));
+              setArray(generateData(validateBarsInput()));
+              setSorted(false);
               setMax(Math.max(...array.map((bar) => bar.value)));
             }
           }}
-        >
-          Generate Array
-        </Button>
+          text="Generate Array"
+        />
       </div>
       <div className="flex flex-row px-4 space-x-4">
+        <TextField label="Size" value={numBars} onChange={onNumBarsChange} />
         <TextField
-          variant="filled"
-          color="secondary"
-          onChange={onNumBarsChange}
-          value={numBars}
-          label="Size of Array"
-        ></TextField>
-        <TextField
-          variant="filled"
-          color="secondary"
-          onChange={onTimeoutLenghtChange}
+          label="Timeout"
           value={timeoutLength}
-          label="Timeout Lenght"
-        ></TextField>
+          onChange={onTimeoutLenghtChange}
+        />
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={algorithm}
           label="Algorithm"
+          value={algorithm}
           onChange={onAlgorithmChange}
-        >
-          <MenuItem value={SortingAlgo.MERGE}>Merge Sort</MenuItem>
-          <MenuItem value={SortingAlgo.INSERTION}>Insertion Sort</MenuItem>
-          <MenuItem value={SortingAlgo.QUICK}>Quick Sort</MenuItem>
-        </Select>
+          options={options}
+        />
       </div>
     </>
   );

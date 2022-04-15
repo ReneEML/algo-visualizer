@@ -1,7 +1,8 @@
-import { Bar, Animation } from "../components/sorting/Animations";
+import { Bar, Animation } from "../../components/sorting/Animations";
 import { pushSelectAnimation, pushSwapAnimation, swap } from "./helpers";
 
 const quickSort = (arr: Bar[]) => {
+  if(arr.length <= 1) return []
   const newArray = arr.map((bar) => bar.value);
   const animations: Animation[] = [];
   quickSortHelper(animations, newArray, 0, newArray.length - 1);

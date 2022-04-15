@@ -1,7 +1,7 @@
 import {
   Animation,
   Bar,
-} from "../components/sorting/Animations";
+} from "../../components/sorting/Animations";
 import { pushSelectAnimation, pushSetAnimation } from "./helpers";
 
 const calculateRight = (index: number, middleIndex: number): number => {
@@ -78,6 +78,7 @@ const mergeSortHelper = (
 };
 
 const mergeSort = (arr: Bar[]): Animation[] => {
+  if(arr.length <= 1) return []
   const newArray = arr.map((arr) => arr.value);
   const animations: Animation[] = [];
   mergeSortHelper(newArray, 0, newArray.length - 1, animations);
