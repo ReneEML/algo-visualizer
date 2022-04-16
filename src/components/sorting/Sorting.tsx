@@ -189,8 +189,10 @@ export const Sorting = () => {
           text="Generate Array"
         />
       </div>
-      <div className="flex flex-row px-4 space-x-4">
-        <TextField label="Size" value={numBars} onChange={onNumBarsChange} />
+      <div className="flex flex-col md:flex-row justify-start px-4 md:space-x-4">
+        <div className="hidden md:flex">
+          <TextField label="Size" value={numBars} onChange={onNumBarsChange} />
+        </div>
         <TextField
           label="Timeout"
           value={timeoutLength}

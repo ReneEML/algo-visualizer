@@ -1,6 +1,6 @@
 const TextField = ({value, onChange, label}: any) => {
   return (
-    <div className="px-3 mb-6 md:mb-0">
+    <div className="px-3 mb-6 md:mb-0 justify-start">
       <label className="block uppercase tracking-wide text-slate-50 text-xs font-bold mb-2">
         {label}
       </label>
